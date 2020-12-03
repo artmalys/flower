@@ -17,7 +17,7 @@ ENV PYTHONPATH ${FLOWER_DATA_DIR}
 WORKDIR $FLOWER_DATA_DIR
 
 # Copy poetry.lock* in case it doesn't exist in the repo
-COPY ./pyproject.toml $FLOWER_DATA_DIR
+COPY ./pyproject.toml ./poetry.lock* $FLOWER_DATA_DIR/
 
 # Install the required packages
 RUN pip install --no-cache-dir --upgrade pip && \
