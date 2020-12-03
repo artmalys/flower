@@ -1,12 +1,7 @@
-FROM python:alpine
+FROM python:3.8-alpine
 
 # Get latest root certificates
 RUN apk add --no-cache ca-certificates && update-ca-certificates
-
-# Install the required packages
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir poetry
-    
 
 # PYTHONUNBUFFERED: Force stdin, stdout and stderr to be totally unbuffered. (equivalent to `python -u`)
 # PYTHONHASHSEED: Enable hash randomization (equivalent to `python -R`)
@@ -20,6 +15,15 @@ ENV FLOWER_DATA_DIR /data
 ENV PYTHONPATH ${FLOWER_DATA_DIR}
 
 WORKDIR $FLOWER_DATA_DIR
+
+# Copy poetry.lock* in case it doesn't exist in the repo
+COPY ./pyproject.toml $FLOWER_DATA_DIR
+
+# Install the required packages
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir poetry && \
+    poetry config virtualenvs.create false && \ 
+    poetry install --no-root --no-dev
 
 # Add a user with an explicit UID/GID and create necessary directories
 RUN set -eux; \
