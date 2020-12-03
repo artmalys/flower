@@ -4,7 +4,9 @@ FROM python:alpine
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 
 # Install the required packages
-RUN pip install --no-cache-dir redis flower
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir poetry
+    
 
 # PYTHONUNBUFFERED: Force stdin, stdout and stderr to be totally unbuffered. (equivalent to `python -u`)
 # PYTHONHASHSEED: Enable hash randomization (equivalent to `python -R`)
